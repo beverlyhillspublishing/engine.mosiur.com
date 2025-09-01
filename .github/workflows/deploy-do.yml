@@ -1,0 +1,112 @@
+name: Deploy to DigitalOcean (DOKS)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment (dev|staging|production)
+        required: true
+        default: production
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'kubernetes/**'
+      - 'scripts/deployment/**'
+      - '.github/workflows/deploy-do.yml'
+
+concurrency:
+  group: doks-${{ github.ref }}-${{ inputs.environment || 'production' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy (${{ inputs.environment || 'production' }})
+    runs-on: ubuntu-latest
+    env:
+      DO_ENV: ${{ inputs.environment || 'production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine overlay and cluster
+        id: setvars
+        shell: bash
+        run: |
+          set -euo pipefail
+          ENV="${{ inputs.environment || 'production' }}"
+          case "$ENV" in
+            dev|development)
+              OVERLAY="dev"
+              CLUSTER="techypark-dev-k8s"
+              ;;
+            staging)
+              OVERLAY="staging"
+              CLUSTER="techypark-staging-k8s"
+              ;;
+            prod|production|"")
+              OVERLAY="production"
+              CLUSTER="techypark-production-k8s"
+              ;;
+            *)
+              echo "Unsupported environment: $ENV" >&2
+              exit 1
+              ;;
+          esac
+          echo "overlay=$OVERLAY" >> "$GITHUB_OUTPUT"
+          echo "cluster=$CLUSTER" >> "$GITHUB_OUTPUT"
+
+      - name: Install doctl (DigitalOcean CLI)
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Verify DigitalOcean auth
+        run: doctl account get
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.28.0
+
+      - name: Fetch kubeconfig for DOKS
+        run: doctl kubernetes cluster kubeconfig save "${{ steps.setvars.outputs.cluster }}"
+
+      - name: Deploy Kubernetes manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          OVERLAY_DIR="kubernetes/overlays/digitalocean/${{ steps.setvars.outputs.overlay }}"
+          if [ ! -f "$OVERLAY_DIR/kustomization.yaml" ]; then
+            echo "No kustomization.yaml at $OVERLAY_DIR; nothing to apply."
+            exit 0
+          fi
+          echo "Applying kustomize overlay: $OVERLAY_DIR"
+          kubectl apply -k "$OVERLAY_DIR"
+
+      - name: Wait for rollout (if deployments exist)
+        shell: bash
+        run: |
+          set -euo pipefail
+          namespace=techypark
+          for d in techypark-backend techypark-frontend; do
+            if kubectl get deploy "$d" -n "$namespace" >/dev/null 2>&1; then
+              kubectl rollout status deployment/"$d" -n "$namespace" --timeout=600s
+            else
+              echo "Deployment $d not found; skipping wait."
+            fi
+          done
+
+      # OPTIONAL: Build and push images to DigitalOcean Container Registry (DOCR)
+      # - name: Log in to DOCR
+      #   run: doctl registry login
+      #
+      # - name: Build and push images
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     push: true
+      #     # Change to your DOCR registry + image name
+      #     tags: registry.digitalocean.com/<registry>/techypark-engine:${{ github.sha }}
