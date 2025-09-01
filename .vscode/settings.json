@@ -1,0 +1,9 @@
+{
+    "git.allowForcePush": true,
+    "git.allowNoVerifyCommit": true,
+    "git.branchPrefix": "Mosiur.Ai",
+    "git.branchProtection": [
+        "Mosiur.Ai"
+    ],
+    "git.branchProtectionPrompt": "alwaysCommitToNewBranch"
+}
