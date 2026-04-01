@@ -1,0 +1,301 @@
+/* Shield360 AI Migration – Admin Styles */
+
+.s360-wrap {
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+/* Header */
+.s360-header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0d7377 100%);
+    color: #fff;
+    padding: 30px 35px;
+    border-radius: 12px 12px 0 0;
+    margin: -1px -1px 0;
+}
+
+.s360-header h1 {
+    color: #fff;
+    font-size: 28px;
+    margin: 0 0 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.s360-header h1 .dashicons {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+}
+
+.s360-subtitle {
+    color: rgba(255,255,255,0.8);
+    font-size: 15px;
+    margin: 0;
+}
+
+/* Tabs */
+.s360-tabs {
+    display: flex;
+    background: #f0f0f1;
+    border-bottom: 2px solid #0d7377;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+.s360-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 22px;
+    text-decoration: none;
+    color: #50575e;
+    font-weight: 500;
+    font-size: 14px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: -2px;
+}
+
+.s360-tab:hover {
+    color: #0d7377;
+    background: rgba(13,115,119,0.05);
+}
+
+.s360-tab.active {
+    color: #0d7377;
+    border-bottom-color: #0d7377;
+    background: #fff;
+}
+
+.s360-tab .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+/* Panels */
+.s360-panel {
+    display: none;
+    background: #fff;
+    padding: 30px 35px;
+    border: 1px solid #c3c4c7;
+    border-top: none;
+}
+
+.s360-panel.active {
+    display: block;
+}
+
+.s360-panel h2 {
+    margin-top: 0;
+    color: #1e3a5f;
+    font-size: 22px;
+}
+
+/* Upload Zone */
+.s360-upload-zone {
+    border: 3px dashed #c3c4c7;
+    border-radius: 12px;
+    padding: 50px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #fafafa;
+}
+
+.s360-upload-zone:hover,
+.s360-upload-zone.dragover {
+    border-color: #0d7377;
+    background: rgba(13,115,119,0.04);
+}
+
+.s360-upload-zone .dashicons {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #0d7377;
+    display: block;
+    margin: 0 auto 15px;
+}
+
+.s360-upload-zone p {
+    color: #646970;
+    font-size: 15px;
+    margin: 0;
+}
+
+.s360-upload-zone.has-file {
+    border-color: #00a32a;
+    background: rgba(0,163,42,0.04);
+}
+
+.s360-upload-zone.has-file .dashicons {
+    color: #00a32a;
+}
+
+/* Progress */
+.s360-progress {
+    margin: 25px 0;
+}
+
+.s360-progress-bar {
+    background: #e0e0e0;
+    border-radius: 20px;
+    height: 24px;
+    overflow: hidden;
+}
+
+.s360-progress-fill {
+    background: linear-gradient(90deg, #0d7377 0%, #14919b 100%);
+    height: 100%;
+    width: 0%;
+    border-radius: 20px;
+    transition: width 0.5s ease;
+    animation: s360-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes s360-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.s360-progress-text {
+    text-align: center;
+    color: #50575e;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Result */
+.s360-result {
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.s360-result.success {
+    background: #edfaef;
+    border: 1px solid #00a32a;
+    color: #1e4620;
+}
+
+.s360-result.error {
+    background: #fcf0f1;
+    border: 1px solid #d63638;
+    color: #8a1f1f;
+}
+
+.s360-result h3 {
+    margin: 0 0 10px;
+}
+
+.s360-result ul {
+    margin: 10px 0 0 20px;
+}
+
+/* Info Grid */
+.s360-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.s360-info-item {
+    background: #f6f7f7;
+    padding: 14px 18px;
+    border-radius: 8px;
+    border-left: 4px solid #0d7377;
+}
+
+.s360-info-item .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #646970;
+    margin-bottom: 4px;
+}
+
+.s360-info-item .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+    word-break: break-all;
+}
+
+.s360-info-item .value.ok { color: #00a32a; }
+.s360-info-item .value.warn { color: #dba617; }
+.s360-info-item .value.bad { color: #d63638; }
+
+/* Footer */
+.s360-footer {
+    background: #f0f0f1;
+    padding: 15px 35px;
+    border: 1px solid #c3c4c7;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    text-align: center;
+    color: #646970;
+    font-size: 13px;
+}
+
+/* Buttons */
+.s360-wrap .button-hero {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 30px !important;
+    font-size: 15px !important;
+}
+
+.s360-wrap .button-hero .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.s360-wrap .button-primary {
+    background: #0d7377;
+    border-color: #0a5c5f;
+}
+
+.s360-wrap .button-primary:hover {
+    background: #0a5c5f;
+    border-color: #084547;
+}
+
+.s360-wrap .button-primary:disabled {
+    background: #a7aaad !important;
+    border-color: #a7aaad !important;
+}
+
+/* Form tweaks */
+.s360-wrap .form-table th {
+    width: 200px;
+    font-weight: 600;
+}
+
+.s360-wrap .form-table td label {
+    display: block;
+    padding: 4px 0;
+}
+
+@media (max-width: 782px) {
+    .s360-tabs {
+        flex-direction: column;
+    }
+    .s360-info-grid {
+        grid-template-columns: 1fr;
+    }
+    .s360-header {
+        padding: 20px;
+    }
+    .s360-panel {
+        padding: 20px;
+    }
+}
